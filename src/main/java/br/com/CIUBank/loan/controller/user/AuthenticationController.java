@@ -16,7 +16,7 @@ import br.com.CIUBank.loan.service.user.IdentificatorService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("v1/auth")
 public class AuthenticationController {
 
 	private final AuthorizationService authorizationService;

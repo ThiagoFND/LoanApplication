@@ -19,7 +19,7 @@ import br.com.CIUBank.loan.service.user.PersonService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("v1/user")
 public class PersonController {
     
     @Autowired
