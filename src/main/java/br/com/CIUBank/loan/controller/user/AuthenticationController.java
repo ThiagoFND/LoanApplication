@@ -1,10 +1,8 @@
 package br.com.CIUBank.loan.controller.user;
-
-import org.springframework.beans.factory.annotation.Autowired;
+	
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,21 +13,22 @@ import br.com.CIUBank.loan.dto.user.AuthenticationDTO;
 import br.com.CIUBank.loan.dto.user.LoginResponseDTO;
 import br.com.CIUBank.loan.dto.user.RegisterDTO;
 import br.com.CIUBank.loan.entity.user.Person;
-import br.com.CIUBank.loan.repositories.PersonRepository;
-import br.com.CIUBank.loan.service.user.IdentificadorService;
+import br.com.CIUBank.loan.service.user.IdentificatorService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("api/v1/auth")
 public class AuthenticationController {
-	@Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private PersonRepository repository;
-    @Autowired
-    private TokenService tokenService;
-    @Autowired
-    private IdentificadorService identificadorService;
+
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
+    private final IdentificatorService identificatorService;
+
+    public AuthenticationController(AuthenticationManager authenticationManager, TokenService tokenService, IdentificatorService identificatorService) {
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+        this.identificatorService = identificatorService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
@@ -43,9 +42,9 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data) {
-        boolean registroSucesso = identificadorService.registrarUsuario(data);
+        boolean registroSucesso = identificatorService.registerUser(data);
         if (!registroSucesso) {
-            return ResponseEntity.badRequest().body("Não foi possível completar o registro. Verifique os dados e tente novamente.");
+            return ResponseEntity.badRequest().body("Unable to complete registration. Check the data and try again.");
         }
         return ResponseEntity.ok().build();
     }

@@ -2,7 +2,7 @@ package br.com.CIUBank.loan.controller.loan;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,33 +17,42 @@ import br.com.CIUBank.loan.dto.loan.LoanDTO;
 import br.com.CIUBank.loan.service.loan.LoanService;
 
 @RestController
-@RequestMapping("api/v1/user/loan")
+@RequestMapping("/api/v1/loan")
 public class LoanController {
 
-	@Autowired
-	private LoanService loanServices;
+	private final LoanService loanServices;
 	
+    public LoanController(LoanService loanServices) {
+        this.loanServices = loanServices;
+    }
+    
     @PostMapping(value = "/",
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public LoanDTO create(@RequestBody LoanDTO loans) {
-		return loanServices.create(loans);
+    		consumes = MediaType.APPLICATION_JSON_VALUE,
+    		produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<LoanDTO> create(@RequestBody LoanDTO loans) {
+		LoanDTO createdLoan = loanServices.create(loans);
+		return new ResponseEntity<>(createdLoan, HttpStatus.CREATED);
 	}
 
 	@GetMapping(value = "/",
-		produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<LoanDTO> findAll() {
-		return loanServices.findAll();
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<LoanDTO>> findAll() {
+		List<LoanDTO> loans = loanServices.findAll();
+		return ResponseEntity.ok(loans);
 	}
 	
-    @GetMapping("/findid/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<LoanDTO> findById(@PathVariable String id) {
-    	LoanDTO setorDTO = loanServices.findById(id);
-        return ResponseEntity.ok(setorDTO);
+    	try {
+    	    LoanDTO loanDTO = loanServices.findById(id);
+    	    return ResponseEntity.ok(loanDTO);
+    	} catch (Exception e) {
+    	    return ResponseEntity.notFound().build();
+    	}
     }
 
-    @DeleteMapping(value = "/delete/{id}")
-	public ResponseEntity<?> delete(@PathVariable(value = "id") String id) {
+    @DeleteMapping("/{id}")
+	public ResponseEntity<Void> delete(@PathVariable(value = "id") String id) {
     	loanServices.delete(id);
 		return ResponseEntity.noContent().build();
 	}

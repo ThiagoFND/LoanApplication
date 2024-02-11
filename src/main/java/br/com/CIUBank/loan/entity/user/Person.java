@@ -27,29 +27,29 @@ public class Person implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 
-	@Column(name = "nome", nullable = false, length = 50)
-	@NotNull(message = "O nome não pode ser nulo")
-	@Size(max = 50, message = "O nome deve ter até  50 caracteres")
-	private String nome;
+	@Column(name = "name", nullable = false, length = 50)
+	@NotNull(message = "Name cannot be null")
+	@Size(max = 50, message = "The name must be up to 50 characters long")
+	private String name;
 
-	@Column(name = "identificador", nullable = false, length = 50)
-	@NotNull(message = "O identificador não pode ser nulo")
-	@Size(max = 50, message = "O identificador deve ter até  50 caracteres")
-	private String identificador;
+	@Column(name = "identifier", nullable = false, length = 50)
+	@NotNull(message = "The identifier cannot be null")
+	@Size(max = 50, message = "The identifier must be up to 50 characters long")
+	private String identifier;
 
-	@NotNull(message = "A data de nascimento não pode ser nula")
-	private LocalDate dataNascimento;
+	@NotNull(message = "The date of birth cannot be null")
+	private LocalDate birthDate;
 
-	@Column(name = "tipoIdentificador", nullable = false, length = 50)
-	@NotNull(message = "O identificador não pode ser nulo")
-	@Size(max = 50, message = "O Tipo Identificador deve ter até  50 caracteres")
-	private String tipoIdentificador;
+	@Column(name = "typeIdentifier", nullable = false, length = 50)
+	@NotNull(message = "The identifier cannot be null")
+	@Size(max = 50, message = "The Identifier Type must have up to 50 characters")
+	private String typeIdentifier;
 
-	@Column(name = "valor_minimo_mensal_das_parcelas", nullable = false, precision = 18, scale = 4)
-	private BigDecimal valorMinimoMensalDasParcelas;
+	@Column(name = "minimumMonthlyValueOfInstallments", nullable = false, precision = 18, scale = 4)
+	private BigDecimal minimumMonthlyValueOfInstallments;
 
-	@Column(name = "valor_maximo_de_todo_o_emprestimo", nullable = false, precision = 18, scale = 4)
-	private BigDecimal valorMaximoDeTodoOEmprestimo;
+	@Column(name = "maximumValueOfAllLoan", nullable = false, precision = 18, scale = 4)
+	private BigDecimal maximumValueOfAllLoan;
 	private String login;
 	private String password;
 	private PersonRole role;
@@ -59,19 +59,18 @@ public class Person implements UserDetails {
 	}
 
 	public Person(
-			@NotNull(message = "O nome não pode ser nulo") @Size(max = 50, message = "O nome deve ter até  50 caracteres") String nome,
-			@NotNull(message = "O identificador não pode ser nulo") @Size(max = 50, message = "O identificador deve ter até  50 caracteres") String identificador,
-			@NotNull(message = "A data de nascimento não pode ser nula") LocalDate dataNascimento,
-			@NotNull(message = "O identificador não pode ser nulo") @Size(max = 50, message = "O Tipo Identificador deve ter até  50 caracteres") String tipoIdentificador,
-			BigDecimal valorMinimoMensalDasParcelas, BigDecimal valorMaximoDeTodoOEmprestimo, String login,
+			@NotNull(message = "Name cannot be null") @Size(max = 50, message = "The name must be up to 50 characters long") String name,
+			@NotNull(message = "The identifier cannot be null") @Size(max = 50, message = "The identifier must be up to 50 characters long") String identifier,
+			@NotNull(message = "The date of birth cannot be null") LocalDate birthDate,
+			@NotNull(message = "The identifier cannot be null") @Size(max = 50, message = "The Identifier Type must have up to 50 characters") String typeIdentifier,
+			BigDecimal minimumMonthlyValueOfInstallments, BigDecimal maximumValueOfAllLoan, String login,
 			String password, PersonRole role) {
-		super();
-		this.nome = nome;
-		this.identificador = identificador;
-		this.dataNascimento = dataNascimento;
-		this.tipoIdentificador = tipoIdentificador;
-		this.valorMinimoMensalDasParcelas = valorMinimoMensalDasParcelas;
-		this.valorMaximoDeTodoOEmprestimo = valorMaximoDeTodoOEmprestimo;
+		this.name = name;
+		this.identifier = identifier;
+		this.birthDate = birthDate;
+		this.typeIdentifier = typeIdentifier;
+		this.minimumMonthlyValueOfInstallments = minimumMonthlyValueOfInstallments;
+		this.maximumValueOfAllLoan = maximumValueOfAllLoan;
 		this.login = login;
 		this.password = password;
 		this.role = role;
@@ -85,52 +84,52 @@ public class Person implements UserDetails {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getIdentificador() {
-		return identificador;
+	public String getIdentifier() {
+		return identifier;
 	}
 
-	public void setIdentificador(String identificador) {
-		this.identificador = identificador;
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
-	public LocalDate getDataNascimento() {
-		return dataNascimento;
+	public LocalDate getBirthDate() {
+		return birthDate;
 	}
 
-	public void setDataNascimento(LocalDate dataNascimento) {
-		this.dataNascimento = dataNascimento;
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
 	}
 
-	public String getTipoIdentificador() {
-		return tipoIdentificador;
+	public String getTypeIdentifier() {
+		return typeIdentifier;
 	}
 
-	public void setTipoIdentificador(String tipoIdentificador) {
-		this.tipoIdentificador = tipoIdentificador;
+	public void setTypeIdentifier(String typeIdentifier) {
+		this.typeIdentifier = typeIdentifier;
 	}
 
-	public BigDecimal getValorMinimoMensalDasParcelas() {
-		return valorMinimoMensalDasParcelas;
+	public BigDecimal getMinimumMonthlyValueOfInstallments() {
+		return minimumMonthlyValueOfInstallments;
 	}
 
-	public void setValorMinimoMensalDasParcelas(BigDecimal valorMinimoMensalDasParcelas) {
-		this.valorMinimoMensalDasParcelas = valorMinimoMensalDasParcelas;
+	public void setMinimumMonthlyValueOfInstallments(BigDecimal minimumMonthlyValueOfInstallments) {
+		this.minimumMonthlyValueOfInstallments = minimumMonthlyValueOfInstallments;
 	}
 
-	public BigDecimal getValorMaximoDeTodoOEmprestimo() {
-		return valorMaximoDeTodoOEmprestimo;
+	public BigDecimal getMaximumValueOfAllLoan() {
+		return maximumValueOfAllLoan;
 	}
 
-	public void setValorMaximoDeTodoOEmprestimo(BigDecimal valorMaximoDeTodoOEmprestimo) {
-		this.valorMaximoDeTodoOEmprestimo = valorMaximoDeTodoOEmprestimo;
+	public void setMaximumValueOfAllLoan(BigDecimal maximumValueOfAllLoan) {
+		this.maximumValueOfAllLoan = maximumValueOfAllLoan;
 	}
 
 	public String getLogin() {
@@ -161,13 +160,17 @@ public class Person implements UserDetails {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((dataNascimento == null) ? 0 : dataNascimento.hashCode());
+		result = prime * result + ((birthDate == null) ? 0 : birthDate.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((identificador == null) ? 0 : identificador.hashCode());
+		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
 		result = prime * result + ((login == null) ? 0 : login.hashCode());
-		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((maximumValueOfAllLoan == null) ? 0 : maximumValueOfAllLoan.hashCode());
+		result = prime * result
+				+ ((minimumMonthlyValueOfInstallments == null) ? 0 : minimumMonthlyValueOfInstallments.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((typeIdentifier == null) ? 0 : typeIdentifier.hashCode());
 		return result;
 	}
 
@@ -180,30 +183,40 @@ public class Person implements UserDetails {
 		if (getClass() != obj.getClass())
 			return false;
 		Person other = (Person) obj;
-		if (dataNascimento == null) {
-			if (other.dataNascimento != null)
+		if (birthDate == null) {
+			if (other.birthDate != null)
 				return false;
-		} else if (!dataNascimento.equals(other.dataNascimento))
+		} else if (!birthDate.equals(other.birthDate))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (identificador == null) {
-			if (other.identificador != null)
+		if (identifier == null) {
+			if (other.identifier != null)
 				return false;
-		} else if (!identificador.equals(other.identificador))
+		} else if (!identifier.equals(other.identifier))
 			return false;
 		if (login == null) {
 			if (other.login != null)
 				return false;
 		} else if (!login.equals(other.login))
 			return false;
-		if (nome == null) {
-			if (other.nome != null)
+		if (maximumValueOfAllLoan == null) {
+			if (other.maximumValueOfAllLoan != null)
 				return false;
-		} else if (!nome.equals(other.nome))
+		} else if (!maximumValueOfAllLoan.equals(other.maximumValueOfAllLoan))
+			return false;
+		if (minimumMonthlyValueOfInstallments == null) {
+			if (other.minimumMonthlyValueOfInstallments != null)
+				return false;
+		} else if (!minimumMonthlyValueOfInstallments.equals(other.minimumMonthlyValueOfInstallments))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
 			return false;
 		if (password == null) {
 			if (other.password != null)
@@ -211,6 +224,11 @@ public class Person implements UserDetails {
 		} else if (!password.equals(other.password))
 			return false;
 		if (role != other.role)
+			return false;
+		if (typeIdentifier == null) {
+			if (other.typeIdentifier != null)
+				return false;
+		} else if (!typeIdentifier.equals(other.typeIdentifier))
 			return false;
 		return true;
 	}

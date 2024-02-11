@@ -24,27 +24,23 @@ public class Loan {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private String id;
 
-	// Para valorEmprestimo
-	@Column(name = "valor_emprestimo", nullable = false, precision = 18, scale = 4)
-	@NotNull(message = "O valor do empréstimo não pode ser nulo")
-	@Digits(integer=14, fraction=4, message = "O valor do empréstimo deve ter até 14 dígitos inteiros e até 4 dígitos fracionários.")
-	private BigDecimal valorEmprestimo;
+	@Column(name = "valueLoan", nullable = false, precision = 18, scale = 4)
+	@NotNull(message = "The loan amount cannot be zero")
+	@Digits(integer = 14, fraction = 4, message = "The loan amount must be up to 14 whole digits and up to 4 fractional digits.")
+	private BigDecimal valueLoan;
 
-	// Para numeroParcelas (sem alterações necessárias)
-	@Column(name = "numero_parcelas", nullable = false)
-	@NotNull(message = "O número das parcelas não pode ser nulo")
-	private Integer numeroParcelas;
+	@Column(name = "numberParcels", nullable = false)
+	@NotNull(message = "The number of installments cannot be null")
+	private Integer numberParcels;
 
-	// Para statusPagamento
-	@Column(name = "status_pagamento", nullable = false, length = 50)
-	@NotNull(message = "O status do pagamento não pode ser nulo")
-	@Size(max = 50, message = "O status do pagamento deve ter até 50 caracteres")
-	private String statusPagamento;
+	@Column(name = "statusPayment", nullable = false, length = 50)
+	@NotNull(message = "Payment status cannot be null")
+	@Size(max = 50, message = "Payment status must be up to 50 characters long")
+	private String statusPayment;
 
-	// Para dataCriacao
-	@Column(name = "data_criacao", nullable = false)
-	@NotNull(message = "A data de criação não pode ser nula")
-	private LocalDate dataCriacao;
+	@Column(name = "dateCreation", nullable = false)
+	@NotNull(message = "The creation date cannot be null")
+	private LocalDate dateCreation;
 
 	@ManyToOne
 	@JoinColumn
@@ -54,13 +50,16 @@ public class Loan {
 		super();
 	}
 
-	public Loan(BigDecimal valorEmprestimo, Integer numeroParcelas, String statusPagamento, LocalDate dataCriacao,
-			Person person) {
+	public Loan(
+			@NotNull(message = "The loan amount cannot be zero") @Digits(integer = 14, fraction = 4, message = "The loan amount must be up to 14 whole digits and up to 4 fractional digits.") BigDecimal valueLoan,
+			@NotNull(message = "The number of installments cannot be null") Integer numberParcels,
+			@NotNull(message = "Payment status cannot be null") @Size(max = 50, message = "Payment status must be up to 50 characters long") String statusPayment,
+			@NotNull(message = "The creation date cannot be null") LocalDate dateCreation, Person person) {
 		super();
-		this.valorEmprestimo = valorEmprestimo;
-		this.numeroParcelas = numeroParcelas;
-		this.statusPagamento = statusPagamento;
-		this.dataCriacao = dataCriacao;
+		this.valueLoan = valueLoan;
+		this.numberParcels = numberParcels;
+		this.statusPayment = statusPayment;
+		this.dateCreation = dateCreation;
 		this.person = person;
 	}
 
@@ -72,6 +71,38 @@ public class Loan {
 		this.id = id;
 	}
 
+	public BigDecimal getValueLoan() {
+		return valueLoan;
+	}
+
+	public void setValueLoan(BigDecimal valueLoan) {
+		this.valueLoan = valueLoan;
+	}
+
+	public Integer getNumberParcels() {
+		return numberParcels;
+	}
+
+	public void setNumberParcels(Integer numberParcels) {
+		this.numberParcels = numberParcels;
+	}
+
+	public String getStatusPayment() {
+		return statusPayment;
+	}
+
+	public void setStatusPayment(String statusPayment) {
+		this.statusPayment = statusPayment;
+	}
+
+	public LocalDate getDateCreation() {
+		return dateCreation;
+	}
+
+	public void setDateCreation(LocalDate dateCreation) {
+		this.dateCreation = dateCreation;
+	}
+
 	public Person getPerson() {
 		return person;
 	}
@@ -80,48 +111,16 @@ public class Loan {
 		this.person = person;
 	}
 
-	public BigDecimal getValorEmprestimo() {
-		return valorEmprestimo;
-	}
-
-	public void setValorEmprestimo(BigDecimal valorEmprestimo) {
-		this.valorEmprestimo = valorEmprestimo;
-	}
-
-	public Integer getNumeroParcelas() {
-		return numeroParcelas;
-	}
-
-	public void setNumeroParcelas(Integer numeroParcelas) {
-		this.numeroParcelas = numeroParcelas;
-	}
-
-	public String getStatusPagamento() {
-		return statusPagamento;
-	}
-
-	public void setStatusPagamento(String statusPagamento) {
-		this.statusPagamento = statusPagamento;
-	}
-
-	public LocalDate getDataCriacao() {
-		return dataCriacao;
-	}
-
-	public void setDataCriacao(LocalDate dataCriacao) {
-		this.dataCriacao = dataCriacao;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((dataCriacao == null) ? 0 : dataCriacao.hashCode());
+		result = prime * result + ((dateCreation == null) ? 0 : dateCreation.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((numeroParcelas == null) ? 0 : numeroParcelas.hashCode());
+		result = prime * result + ((numberParcels == null) ? 0 : numberParcels.hashCode());
 		result = prime * result + ((person == null) ? 0 : person.hashCode());
-		result = prime * result + ((statusPagamento == null) ? 0 : statusPagamento.hashCode());
-		result = prime * result + ((valorEmprestimo == null) ? 0 : valorEmprestimo.hashCode());
+		result = prime * result + ((statusPayment == null) ? 0 : statusPayment.hashCode());
+		result = prime * result + ((valueLoan == null) ? 0 : valueLoan.hashCode());
 		return result;
 	}
 
@@ -134,35 +133,35 @@ public class Loan {
 		if (getClass() != obj.getClass())
 			return false;
 		Loan other = (Loan) obj;
-		if (dataCriacao == null) {
-			if (other.dataCriacao != null)
+		if (dateCreation == null) {
+			if (other.dateCreation != null)
 				return false;
-		} else if (!dataCriacao.equals(other.dataCriacao))
+		} else if (!dateCreation.equals(other.dateCreation))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (numeroParcelas == null) {
-			if (other.numeroParcelas != null)
+		if (numberParcels == null) {
+			if (other.numberParcels != null)
 				return false;
-		} else if (!numeroParcelas.equals(other.numeroParcelas))
+		} else if (!numberParcels.equals(other.numberParcels))
 			return false;
 		if (person == null) {
 			if (other.person != null)
 				return false;
 		} else if (!person.equals(other.person))
 			return false;
-		if (statusPagamento == null) {
-			if (other.statusPagamento != null)
+		if (statusPayment == null) {
+			if (other.statusPayment != null)
 				return false;
-		} else if (!statusPagamento.equals(other.statusPagamento))
+		} else if (!statusPayment.equals(other.statusPayment))
 			return false;
-		if (valorEmprestimo == null) {
-			if (other.valorEmprestimo != null)
+		if (valueLoan == null) {
+			if (other.valueLoan != null)
 				return false;
-		} else if (!valorEmprestimo.equals(other.valorEmprestimo))
+		} else if (!valueLoan.equals(other.valueLoan))
 			return false;
 		return true;
 	}

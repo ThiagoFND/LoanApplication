@@ -1,6 +1,5 @@
 package br.com.CIUBank.loan.service.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,9 +13,12 @@ import br.com.CIUBank.loan.repositories.PersonRepository;
 @Service
 public class AuthorizationService implements UserDetailsService {
 
-	@Autowired
-	PersonRepository repository;
+	private PersonRepository repository;
 
+    public AuthorizationService(PersonRepository repository) {
+        this.repository = repository;
+    }
+    
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return repository.findByLogin(username);
