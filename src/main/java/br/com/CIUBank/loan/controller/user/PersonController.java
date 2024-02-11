@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.CIUBank.loan.dto.user.PasswordUpdateDTO;
 import br.com.CIUBank.loan.dto.user.PersonDTO;
 import br.com.CIUBank.loan.service.user.PersonService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -30,12 +32,8 @@ public class PersonController {
     }
     
     @PatchMapping("/changePassword/{id}")
-    public ResponseEntity<?> updatePassword(@PathVariable String id, @RequestBody PasswordUpdateDTO passwordUpdateDTO) {
+    public ResponseEntity<?> updatePassword(@PathVariable String id, @Valid @RequestBody PasswordUpdateDTO passwordUpdateDTO) {
         logger.info("Password update request received");
-
-        if (passwordUpdateDTO.getOldPassword() == null || passwordUpdateDTO.getNewPassword() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The old password and the new password cannot be null.");
-        }
 
         personService.updatePassword(id, passwordUpdateDTO.getOldPassword(), passwordUpdateDTO.getNewPassword());
         return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
@@ -50,6 +48,18 @@ public class PersonController {
         } catch (Exception e) {
             logger.severe("Error finding user with ID: " + id + ". Error: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+    @DeleteMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivatePerson(@PathVariable String id) {
+        try {
+            logger.info("Request received to deactivate user with ID: " + id);
+            personService.deactivatePerson(id);
+            return new ResponseEntity<>("User deactivated successfully.", HttpStatus.OK);
+        } catch (Exception e) {
+            logger.severe("Error deactivating user with ID: " + id + ". Error: " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

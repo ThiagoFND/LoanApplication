@@ -1,7 +1,5 @@
 package br.com.CIUBank.loan.config;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,10 +18,15 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
-    @Autowired
+	
     private SecurityFilter securityFilter;
 
-    @Bean
+    
+    public SecurityConfigurations(SecurityFilter securityFilter) {
+		this.securityFilter = securityFilter;
+	}
+
+	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .cors(withDefaults())

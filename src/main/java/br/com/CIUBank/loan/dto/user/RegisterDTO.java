@@ -6,5 +6,5 @@ import java.time.LocalDate;
 import br.com.CIUBank.loan.entity.user.PersonRole;
 
 public record RegisterDTO(String name, String identifier, LocalDate birthDate,  String typeIdentifier, BigDecimal minimumMonthlyValueOfInstallments,
-		BigDecimal maximumValueOfAllLoan, String login, String password, PersonRole role) {
+		BigDecimal maximumValueOfAllLoan, String active, String login, String password, PersonRole role) {
 }

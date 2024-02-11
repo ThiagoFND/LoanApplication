@@ -17,7 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Table(name = "users")
+@Table(name = "person")
 @Entity
 public class PersonDTO implements UserDetails {
 
@@ -30,6 +30,7 @@ public class PersonDTO implements UserDetails {
 	private String typeIdentifier;
 	private BigDecimal minimumMonthlyValueOfInstallments;
 	private BigDecimal maximumValueOfAllLoan;
+	private String active;
 	private String login;
 	private String password;
 	private PersonRole role;
@@ -38,15 +39,17 @@ public class PersonDTO implements UserDetails {
 		super();
 	}
 
-	public PersonDTO( String name, String identifier, LocalDate birthDate, String typeIdentifier,
-			BigDecimal minimumMonthlyValueOfInstallments, BigDecimal maximumValueOfAllLoan, String login,
+	public PersonDTO(String name, String identifier, LocalDate birthDate, String typeIdentifier,
+			BigDecimal minimumMonthlyValueOfInstallments, BigDecimal maximumValueOfAllLoan, String active, String login,
 			String password, PersonRole role) {
+		super();
 		this.name = name;
 		this.identifier = identifier;
 		this.birthDate = birthDate;
 		this.typeIdentifier = typeIdentifier;
 		this.minimumMonthlyValueOfInstallments = minimumMonthlyValueOfInstallments;
 		this.maximumValueOfAllLoan = maximumValueOfAllLoan;
+		this.active = "ACTIVE";
 		this.login = login;
 		this.password = password;
 		this.role = role;
@@ -108,6 +111,14 @@ public class PersonDTO implements UserDetails {
 		this.maximumValueOfAllLoan = maximumValueOfAllLoan;
 	}
 
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
+	}
+
 	public String getLogin() {
 		return login;
 	}
@@ -136,6 +147,7 @@ public class PersonDTO implements UserDetails {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((active == null) ? 0 : active.hashCode());
 		result = prime * result + ((birthDate == null) ? 0 : birthDate.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
@@ -159,6 +171,11 @@ public class PersonDTO implements UserDetails {
 		if (getClass() != obj.getClass())
 			return false;
 		PersonDTO other = (PersonDTO) obj;
+		if (active == null) {
+			if (other.active != null)
+				return false;
+		} else if (!active.equals(other.active))
+			return false;
 		if (birthDate == null) {
 			if (other.birthDate != null)
 				return false;
@@ -212,10 +229,6 @@ public class PersonDTO implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		if (this.role == PersonRole.ADMIN) {
-			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-		}
 		if (this.role == PersonRole.USER) {
 			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		}
