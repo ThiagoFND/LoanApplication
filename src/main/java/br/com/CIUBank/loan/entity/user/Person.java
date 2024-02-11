@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -254,11 +255,7 @@ public class Person implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<GrantedAuthority> authorities = new ArrayList<>();
-		if (this.role == PersonRole.USER) {
-			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-		}
-		return authorities;
+		return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
 	}
 
 	@Override
