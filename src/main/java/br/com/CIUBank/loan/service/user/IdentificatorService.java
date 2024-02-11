@@ -13,7 +13,7 @@ import br.com.CIUBank.loan.repositories.PersonRepository;
 @Service
 public class IdentificatorService {
 
-	private PersonRepository personRepository;
+	private final PersonRepository personRepository;
 
     public IdentificatorService(PersonRepository personRepository) {
         this.personRepository = personRepository;
