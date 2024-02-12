@@ -1,6 +1,5 @@
 package br.com.CIUBank.loan.service.loan;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Logger;
 

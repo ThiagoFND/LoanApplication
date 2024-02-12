@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import br.com.CIUBank.loan.dto.user.PersonDTO;
-import br.com.CIUBank.loan.entity.user.Person;
-import br.com.CIUBank.loan.entity.user.PersonRole;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

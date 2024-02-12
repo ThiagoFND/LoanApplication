@@ -2,16 +2,13 @@ package br.com.CIUBank.loan.dto.user;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.com.CIUBank.loan.entity.user.Person;
 import br.com.CIUBank.loan.entity.user.PersonRole;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
