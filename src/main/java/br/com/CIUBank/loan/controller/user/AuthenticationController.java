@@ -34,8 +34,8 @@ public class AuthenticationController {
 
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data) {
-		boolean registroSucesso = identificatorService.registerUser(data);
-		if (!registroSucesso) {
+		boolean registrationCompletedSuccessfully = identificatorService.registerUser(data);
+		if (!registrationCompletedSuccessfully) {
 			return ResponseEntity.badRequest().body("Unable to complete registration. Check the data and try again.");
 		}
 		return ResponseEntity.ok().build();

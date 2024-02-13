@@ -1,6 +1,7 @@
 package br.com.CIUBank.loan.service.user;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,12 +34,13 @@ public class PersonService {
 		return DozerMapper.parseListObjects(users, PersonDTO.class);
 	}
 
-	public PersonDTO findById(String id) {
-		authorizeAccess(id);
-		var entity = personRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
-		return DozerMapper.parseObject(entity, PersonDTO.class);
+	public Optional<PersonDTO> findById(String id) {
+	    authorizeAccess(id);
+	    return personRepository.findById(id)
+	            .map(entity -> DozerMapper.parseObject(entity, PersonDTO.class));
 	}
+
+
 
 	@Transactional
 	public PersonDTO updatePassword(String id, String oldPassword, String newPassword) {

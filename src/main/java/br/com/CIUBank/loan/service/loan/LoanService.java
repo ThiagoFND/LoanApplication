@@ -1,6 +1,7 @@
 package br.com.CIUBank.loan.service.loan;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.springframework.security.core.Authentication;
@@ -8,9 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.CIUBank.loan.entity.user.Person;
 import br.com.CIUBank.loan.dto.loan.LoanDTO;
 import br.com.CIUBank.loan.entity.loan.Loan;
+import br.com.CIUBank.loan.entity.user.Person;
 import br.com.CIUBank.loan.exceptions.BusinessException;
 import br.com.CIUBank.loan.exceptions.ResourceNotFoundException;
 import br.com.CIUBank.loan.mapper.DozerMapper;
@@ -50,14 +51,15 @@ public class LoanService {
         }
     }
 
-    public LoanDTO findById(String id) {
+    public Optional<LoanDTO> findById(String id) {
         logger.info("Finding loan by ID: " + id);
-        var loan = loanRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
-        logger.info("Loan found with ID: " + id + " for user ID: " + loan.getPerson().getId());
-        authorizeAccess(loan.getPerson().getId().toString());
-        return DozerMapper.parseObject(loan, LoanDTO.class);
+        return loanRepository.findById(id).map(loan -> {
+            logger.info("Loan found with ID: " + id + " for user ID: " + loan.getPerson().getId());
+            authorizeAccess(loan.getPerson().getId().toString());
+            return DozerMapper.parseObject(loan, LoanDTO.class);
+        });
     }
+
 
     @Transactional
     public LoanDTO create(LoanDTO loanDTO) {
