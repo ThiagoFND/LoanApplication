@@ -18,7 +18,7 @@ import br.com.CIUBank.loan.dto.loan.LoanDTO;
 import br.com.CIUBank.loan.service.loan.LoanService;
 
 @RestController
-@RequestMapping("/v1/loan")
+@RequestMapping("loan")
 public class LoanController {
 
 	private final LoanService loanServices;
