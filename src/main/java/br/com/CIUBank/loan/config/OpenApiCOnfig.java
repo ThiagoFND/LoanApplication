@@ -50,5 +50,4 @@ public class OpenApiConfig {
 	                new Server().url("https://api.ciubank.prod").description("Production Environment")
 	            ));
 	}
-
 }

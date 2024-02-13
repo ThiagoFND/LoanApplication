@@ -4,14 +4,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.GrantedAuthority;
 
 import br.com.CIUBank.loan.dto.user.PersonDTO;
 import br.com.CIUBank.loan.exceptions.ResourceNotFoundException;
 import br.com.CIUBank.loan.mapper.DozerMapper;
 import br.com.CIUBank.loan.repositories.PersonRepository;
-import jakarta.transaction.Transactional;
 
 @Service
 public class PersonService {
@@ -35,14 +37,10 @@ public class PersonService {
 	}
 
 	public Optional<PersonDTO> findById(String id) {
-	    authorizeAccess(id);
-	    return personRepository.findById(id)
-	            .map(entity -> DozerMapper.parseObject(entity, PersonDTO.class));
+		authorizeAccess(id);
+		return personRepository.findById(id).map(entity -> DozerMapper.parseObject(entity, PersonDTO.class));
 	}
 
-
-
-	@Transactional
 	public PersonDTO updatePassword(String id, String oldPassword, String newPassword) {
 		authorizeAccess(id);
 		var user = personRepository.findById(id)
@@ -58,24 +56,33 @@ public class PersonService {
 	}
 
 	private void authorizeAccess(String userId) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		boolean isAdmin = authentication.getAuthorities().stream()
+				.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+
+		if (isAdmin) {
+			logger.info("Access granted to ADMIN for user ID: " + userId);
+			return;
+		}
+
 		if (!authorizationService.isUserOwnerOfId(userId)) {
 			logger.warning("Unauthorized access attempt for user ID: " + userId);
 			throw new SecurityException("User is not authorized for this operation.");
 		}
 	}
-	
-    @Transactional
-    public void deactivatePerson(String id) {
-        authorizeAccess(id);
-        var person = personRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
 
-        if ("INACTIVE".equals(person.getActive())) {
-            throw new IllegalStateException("Person is already deactivated.");
-        }
+	public void deactivatePerson(String id) {
+		authorizeAccess(id);
+		var person = personRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
 
-        person.setActive("INACTIVE");
-        personRepository.save(person);
-        logger.info("Person with ID: " + id + " has been deactivated.");
-    }
+		if ("INACTIVE".equals(person.getActive())) {
+			throw new IllegalStateException("Person is already deactivated.");
+		}
+
+		person.setActive("INACTIVE");
+		personRepository.save(person);
+		logger.info("Person with ID: " + id + " has been deactivated.");
+	}
 }

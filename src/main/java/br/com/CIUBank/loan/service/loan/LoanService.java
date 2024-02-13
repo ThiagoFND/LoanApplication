@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import br.com.CIUBank.loan.dto.loan.LoanDTO;
 import br.com.CIUBank.loan.entity.loan.Loan;
@@ -60,8 +59,6 @@ public class LoanService {
         });
     }
 
-
-    @Transactional
     public LoanDTO create(LoanDTO loanDTO) {
         logger.info("Creating a loan for user ID: " + loanDTO.getPerson().getId());
         validateLoanDTO(loanDTO);
@@ -81,7 +78,6 @@ public class LoanService {
         return DozerMapper.parseObject(savedLoan, LoanDTO.class);
     }
 
-    @Transactional
     public void delete(String id) {
         logger.info("Attempting to delete loan with ID: " + id);
         var loan = loanRepository.findById(id)
