@@ -21,8 +21,8 @@ public class PersonDTO {
     private BigDecimal maximumValueOfAllLoan;
     private String active;
     private String login;
-    private String password; // Consider security implications of including password in DTO
-    private PersonRole role; // Assuming PersonRole is an enum or similar simple class
+    private String password;
+    private PersonRole role;
 
     public PersonDTO() {
         super();
@@ -41,9 +41,7 @@ public class PersonDTO {
         this.maximumValueOfAllLoan = maximumValueOfAllLoan;
         this.active = active;
         this.login = login;
-        this.password = password; // Again, be cautious about security.
+        this.password = password;
         this.role = role;
     }
-
-    // Getters and Setters (Omitted for brevity, Lombok takes care of them)
 }

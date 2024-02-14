@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,33 +22,39 @@ import br.com.CIUBank.loan.service.loan.LoanService;
 @RequestMapping("loan")
 public class LoanController {
 
-	private final LoanService loanServices;
+    private final LoanService loanServices;
 
-	public LoanController(LoanService loanServices) {
-		this.loanServices = loanServices;
-	}
+    public LoanController(LoanService loanServices) {
+        this.loanServices = loanServices;
+    }
 
-	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<LoanDTO> create(@RequestBody LoanDTO loans) {
-		LoanDTO createdLoan = loanServices.create(loans);
-		return new ResponseEntity<>(createdLoan, HttpStatus.CREATED);
-	}
+    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LoanDTO> create(@RequestBody LoanDTO loans) {
+        LoanDTO createdLoan = loanServices.create(loans);
+        return new ResponseEntity<>(createdLoan, HttpStatus.CREATED);
+    }
 
-	@GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<LoanDTO>> findAll() {
-		List<LoanDTO> loans = loanServices.findAll();
-		return ResponseEntity.ok(loans);
-	}
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<LoanDTO>> findAll() {
+        List<LoanDTO> loans = loanServices.findAll();
+        return ResponseEntity.ok(loans);
+    }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<LoanDTO> findById(@PathVariable String id) {
-		Optional<LoanDTO> loanDTO = loanServices.findById(id);
-		return loanDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<LoanDTO> findById(@PathVariable String id) {
+        Optional<LoanDTO> loanDTO = loanServices.findById(id);
+        return loanDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<?> delete(@PathVariable(value = "id") String id) {
-		loanServices.delete(id);
-		return ResponseEntity.ok("Recurso deletado com sucesso.");
-	}
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> delete(@PathVariable(value = "id") String id) {
+        loanServices.markLoanAsInactive(id);
+        return ResponseEntity.ok("Resource deleted successfully.");
+    }
+
+    @PatchMapping(value = "/payment/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> markLoanAsPaid(@PathVariable String id) {
+        loanServices.markLoanAsPaid(id);
+        return ResponseEntity.ok("Loan marked as successful payment.");
+    }
 }
