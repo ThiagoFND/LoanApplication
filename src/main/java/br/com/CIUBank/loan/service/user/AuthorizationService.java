@@ -73,4 +73,18 @@ public class AuthorizationService implements UserDetailsService {
             throw new SecurityException("User is inactive and cannot perform this operation.");
         }
     }
+    
+    public boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+    }
+    
+    public void authorizeAccess(String userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (isAdmin(authentication)) {
+        } else if (!isUserOwnerOfId(userId)) {
+            throw new SecurityException("User is not authorized for this operation.");
+        }
+    }
 }
