@@ -14,7 +14,6 @@ import br.com.CIUBank.loan.repositories.PersonRepository;
 @Service
 public class IdentificatorService {
 
-	
 	private final PersonRepository personRepository;
 	private final CNPJValidator cnpjValidator;
 	private final CPFValidator cpfValidator;
@@ -40,7 +39,7 @@ public class IdentificatorService {
 		}
 
 		String typeIdentifier = determineTypeIdentifier(data.identifier());
-		
+
 		if (!isValidIdentifier(data.identifier(), typeIdentifier)) {
 			return false;
 		}
@@ -111,8 +110,8 @@ public class IdentificatorService {
 				.orElseThrow(() -> new ResourceNotFoundException("User not found for the given ID."))
 				.getMaximumValueOfAllLoan();
 	}
-	
-    public BigDecimal getMinInstallmentValueForUserType(String typeIdentifier) {
-        return minimumParcelValues.getOrDefault(typeIdentifier, BigDecimal.ZERO);
-    }
+
+	public BigDecimal getMinInstallmentValueForUserType(String typeIdentifier) {
+		return minimumParcelValues.getOrDefault(typeIdentifier, BigDecimal.ZERO);
+	}
 }
