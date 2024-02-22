@@ -78,4 +78,9 @@ public class PersonService {
     private void authorizeAccess(String userId) {
         authorizationService.authorizeAccess(userId);
     }
+    
+    public boolean existsByIdentifier(String identifier) {
+        return personRepository.findByIdentifier(identifier).isPresent();
+    }
+
 }

@@ -25,11 +25,11 @@ services:
     working_dir: /
     environment:
       TZ: America/Sao_Paulo
-      SPRING.DATASOURCE.URL: jdbc:mysql://db:3308/ciubank?useTimezone=true&serverTimezone=UTC
+      SPRING.DATASOURCE.URL: jdbc:mysql://db:3308/ciubank?useTimezone=true&serverTimezone=America/Sao_Paulo
       SPRING.DATASOURCE.USERNAME: root
       SPRING.DATASOURCE.PASSWORD: root
     ports:
-      - 8080:80
+      - 8080:8080
     command: mvn spring-boot:run
     depends_on:
       - db

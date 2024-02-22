@@ -28,7 +28,7 @@ public class IdentificatorService {
 			CPFValidator cpfValidator) {
 		super();
 		this.personRepository = personRepository;
-		this.cnpjValidator = cnpjValidator;
+		this.cnpjValidator = cnpjValidator;	
 		this.cpfValidator = cpfValidator;
 	}
 
