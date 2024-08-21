@@ -1,4 +1,4 @@
-package br.com.CIUBank.loan;
+	package br.com.CIUBank.loan;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

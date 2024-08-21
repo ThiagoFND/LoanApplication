@@ -1,13 +1,16 @@
 package br.com.CIUBank.loan.service.user;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.CIUBank.loan.dto.user.PersonDTO;
+import br.com.CIUBank.loan.dto.user.RegisterDTO;
 import br.com.CIUBank.loan.entity.user.Person;
 import br.com.CIUBank.loan.exceptions.ResourceNotFoundException;
 import br.com.CIUBank.loan.mapper.DozerMapper;
@@ -19,20 +22,49 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorizationService authorizationService;
+    public final PersonIdentificatorService identificatorService;
     private final Logger logger = Logger.getLogger(PersonService.class.getName());
 
     public PersonService(PersonRepository personRepository, PasswordEncoder passwordEncoder,
-                         AuthorizationService authorizationService) {
-        this.personRepository = personRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authorizationService = authorizationService;
-    }
+			AuthorizationService authorizationService, PersonIdentificatorService identificatorService) {
+		super();
+		this.personRepository = personRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.authorizationService = authorizationService;
+		this.identificatorService = identificatorService;
+	}
 
-    public List<PersonDTO> findAll() {
+	public List<PersonDTO> findAll() {
         var users = personRepository.findAll();
         logger.info("Finding all users! Total found: " + users.size());
         return DozerMapper.parseListObjects(users, PersonDTO.class);
     }
+    
+	public boolean registerUser(final RegisterDTO data) {
+	    boolean userExists = personRepository.findByIdentifier(data.identifier()).isPresent();
+	    if (userExists) {
+	        return false;
+	    }
+
+		return Optional.ofNullable(identificatorService.determineTypeIdentifier(data.identifier()))
+				.filter(typeIdentifier -> identificatorService.isValidIdentifier(data.identifier(), typeIdentifier))
+				.map(typeIdentifier -> {
+					BigDecimal valueMinimumParcels = identificatorService.minimumParcelValues
+							.getOrDefault(typeIdentifier, BigDecimal.ZERO);
+					BigDecimal valueMaximoLoan = identificatorService.maximumLoanValues.getOrDefault(typeIdentifier,
+							BigDecimal.ZERO);
+					return new BigDecimal[] { valueMinimumParcels, valueMaximoLoan };
+				})
+				.filter(values -> values[0].compareTo(BigDecimal.ZERO) > 0 && values[1].compareTo(BigDecimal.ZERO) > 0)
+				.map(values -> {
+					var encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+					var newUser = new Person(data.name(), data.identifier(), data.birthDate(),
+							identificatorService.determineTypeIdentifier(data.identifier()), values[0], values[1],
+							data.active(), data.login(), encryptedPassword, data.role());
+					personRepository.save(newUser);
+					return true;
+				}).orElse(false);
+	}
 
     public Optional<PersonDTO> findById(String id) {
         authorizeAccess(id);
@@ -60,19 +92,21 @@ public class PersonService {
     }
     
     private void validateOldPassword(String oldPassword, String currentPassword) {
-        if (!passwordEncoder.matches(oldPassword, currentPassword)) {
-            throw new IllegalArgumentException("Old password is incorrect.");
-        }
+        Optional.of(oldPassword)
+                .filter(pass -> passwordEncoder.matches(pass, currentPassword))
+                .orElseThrow(() -> new IllegalArgumentException("Old password is incorrect."));
     }
 
     private void deactivateIfActive(Person person) {
-        if (!"INACTIVE".equals(person.getActive())) {
-            person.setActive("INACTIVE");
-            personRepository.save(person);
-            logger.info("Person with ID: " + person.getId() + " has been deactivated.");
-        } else {
-            throw new IllegalStateException("Person is already deactivated.");
-        }
+        Optional.of(person)
+            .filter(p -> !"INACTIVE".equals(p.getActive()))
+            .ifPresentOrElse(p -> {
+                p.setActive("INACTIVE");
+                personRepository.save(p);
+                logger.info("Person with ID: " + p.getId() + " has been deactivated.");
+            }, () -> {
+                throw new IllegalStateException("Person is already deactivated.");
+            });
     }
     
     private void authorizeAccess(String userId) {

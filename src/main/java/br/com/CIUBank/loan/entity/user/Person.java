@@ -1,3 +1,4 @@
+
 package br.com.CIUBank.loan.entity.user;
 
 import java.math.BigDecimal;
@@ -23,7 +24,9 @@ import lombok.Setter;
 
 @Table(name = "person")
 @Entity
-@Setter @Getter @EqualsAndHashCode
+@Setter
+@Getter
+@EqualsAndHashCode
 public class Person implements UserDetails {
 
 	@Id

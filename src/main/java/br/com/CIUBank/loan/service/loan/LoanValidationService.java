@@ -7,20 +7,16 @@ import org.springframework.stereotype.Service;
 
 import br.com.CIUBank.loan.dto.loan.LoanDTO;
 import br.com.CIUBank.loan.exceptions.BusinessException;
-import br.com.CIUBank.loan.service.user.IdentificatorService;
+import br.com.CIUBank.loan.service.user.PersonIdentificatorService;
 
 @Service
 public class LoanValidationService {
 
-	private final IdentificatorService identificatorService;
-	private final LoanRepositoryWrapper loanRepositoryWrapper;
+	private final PersonIdentificatorService identificatorService;
 	private final Logger logger = Logger.getLogger(LoanValidationService.class.getName());
 
-	public LoanValidationService(IdentificatorService identificatorService,
-			LoanRepositoryWrapper loanRepositoryWrapper) {
-		super();
+	public LoanValidationService(PersonIdentificatorService identificatorService) {
 		this.identificatorService = identificatorService;
-		this.loanRepositoryWrapper = loanRepositoryWrapper;
 	}
 
 	public void validateLoanCreation(LoanDTO loanDTO) {

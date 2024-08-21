@@ -1,5 +1,7 @@
 package br.com.CIUBank.loan.service.user;
 
+import java.util.Optional;
+
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,17 +37,16 @@ public class AuthorizationService implements UserDetailsService {
     }
 
     public boolean isUserOwnerOfId(String userId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            var principal = authentication.getPrincipal();
-
-            if (principal instanceof Person) {
-                var loggedInUser = (Person) principal;
-                return userId.equals(loggedInUser.getId());
-            }
-        }
-        return false;
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .filter(Authentication::isAuthenticated)
+                .map(Authentication::getPrincipal)
+                .filter(principal -> principal instanceof Person)
+                .map(principal -> (Person) principal)
+                .map(Person::getId)
+                .filter(id -> id.equals(userId))
+                .isPresent();
     }
+
 
     public String authenticate(String username, String password) {
         var person = (Person) repository.findByLogin(username);
@@ -82,8 +83,7 @@ public class AuthorizationService implements UserDetailsService {
     public void authorizeAccess(String userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (isAdmin(authentication)) {
-        } else if (!isUserOwnerOfId(userId)) {
+        if (!isAdmin(authentication) && !isUserOwnerOfId(userId)) {
             throw new SecurityException("User is not authorized for this operation.");
         }
     }

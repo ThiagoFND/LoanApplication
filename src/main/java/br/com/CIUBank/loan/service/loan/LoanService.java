@@ -1,7 +1,5 @@
 package br.com.CIUBank.loan.service.loan;
 
-import java.util.logging.Logger;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;

@@ -3,7 +3,7 @@ package br.com.CIUBank.loan.service.user;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CPFValidator implements IdentifierValidator {
+public class PersonCPFValidator implements PersonIdentifierValidator {
 	@Override
 	public boolean isValid(String cpfInput) {
 		var cpf = cpfInput.replaceAll("\\D+", "");

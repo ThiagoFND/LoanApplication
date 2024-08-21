@@ -10,7 +10,8 @@ import br.com.CIUBank.loan.dto.user.AuthenticationDTO;
 import br.com.CIUBank.loan.dto.user.LoginResponseDTO;
 import br.com.CIUBank.loan.dto.user.RegisterDTO;
 import br.com.CIUBank.loan.service.user.AuthorizationService;
-import br.com.CIUBank.loan.service.user.IdentificatorService;
+import br.com.CIUBank.loan.service.user.PersonIdentificatorService;
+import br.com.CIUBank.loan.service.user.PersonService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -18,12 +19,12 @@ import jakarta.validation.Valid;
 public class AuthenticationController {
 
 	private final AuthorizationService authorizationService;
-	private final IdentificatorService identificatorService;
+	private final PersonService personService;
 
-	public AuthenticationController(AuthorizationService authorizationService,
-			IdentificatorService identificatorService) {
+	public AuthenticationController(AuthorizationService authorizationService, PersonService personService) {
+		super();
 		this.authorizationService = authorizationService;
-		this.identificatorService = identificatorService;
+		this.personService = personService;
 	}
 
 	@PostMapping("/login")
@@ -34,7 +35,7 @@ public class AuthenticationController {
 
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data) {
-		boolean registrationCompletedSuccessfully = identificatorService.registerUser(data);
+		boolean registrationCompletedSuccessfully = personService.registerUser(data);
 		if (!registrationCompletedSuccessfully) {
 			return ResponseEntity.badRequest().body("Unable to complete registration. Check the data and try again.");
 		}
